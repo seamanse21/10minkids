@@ -125,6 +125,8 @@ section{padding:68px 0}
   background-repeat:no-repeat;background-position:right 15px center;padding-right:40px}
 .stb_form_set_input:focus,.stb_form_set_select:focus{outline:0;border-color:var(--orange);
   box-shadow:0 0 0 3px rgba(240,140,46,.16)}
+.fieldhint{font-size:13px;color:var(--mute);margin:0 0 8px;line-height:1.6}
+.fieldhint b{color:var(--navy);font-weight:normal;font-family:"Jua",sans-serif}
 .stb_form_msg_error{color:#d6453c;font-size:13.5px;margin-top:6px;line-height:1.5}
 .stb_form_msg_error:empty{display:none}
 .stb_form_policy{margin:0 0 11px;font-size:14px;color:var(--mute);line-height:1.6}
@@ -361,6 +363,8 @@ footer a:hover{text-decoration:underline}
 
           <fieldset class="stb_form_set">
             <label for="stb_grade" class="stb_form_set_label">아이 학년</label>
+            <p class="fieldhint">아이가 여럿이면 <b>주로 보여 주실 아이</b>를 골라 주세요.
+              학년에 맞춰 난이도를 다듬는 데에만 씁니다.</p>
             <select class="stb_form_set_select" id="stb_grade" name="grade">
               <option value="">선택</option>
               <option>7세</option>
