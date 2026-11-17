@@ -141,9 +141,10 @@ section{padding:68px 0}
   box-shadow:0 8px 20px rgba(240,140,46,.3)}
 .stb_form_submit_button:hover{background:var(--orange-d)}
 .stb_form_result{font-size:15px;line-height:1.7;margin-top:14px;color:var(--navy)}
-.sentnote{background:#fff6e7;border:1.5px solid var(--orange);border-radius:12px;
-  padding:16px 18px;margin:14px 0 0;font-size:14.5px;line-height:1.75;color:var(--navy)}
-.sentnote b{color:var(--orange-d);font-weight:normal;font-family:"Jua",sans-serif}
+.typotip{margin-top:8px;font-size:14px;color:var(--navy);line-height:1.6}
+.typotip b{color:var(--orange-d);font-weight:normal;font-family:"Jua",sans-serif}
+.typofix{background:0;border:0;padding:0;margin-left:4px;font:inherit;font-size:14px;
+  color:var(--orange-d);text-decoration:underline;cursor:pointer}
 .stb_form_result:empty{display:none}
 /* 약관 모달 */
 .blind{display:none !important}
@@ -500,23 +501,48 @@ footer a:hover{text-decoration:underline}
   document.addEventListener('keydown',function(e){ if(e.key==='Escape') lb.classList.remove('on'); });
 })();
 
-/* 제출 뒤 스티비가 띄우는 결과 메시지 아래에 안내를 덧붙인다.
-   확인 메일을 못 찾으면 그대로 이탈하므로, 스팸함을 먼저 보게 한다. */
+/* 제출이 성공하면 곧바로 받는 페이지로 보낸다.
+   스티비의 '구독 확인 이메일' 을 꺼 둔 상태를 전제로 한다. 다시 켜면 이 이동을 빼야 한다. */
 (function(){
   var box = document.getElementById('stb_form_result');
   if(!box) return;
-  var done = false;
+  var gone = false;
   new MutationObserver(function(){
-    if(done) return;
+    if(gone) return;
     if(box.className.indexOf('success') < 0) return;
-    done = true;
-    var p = document.createElement('p');
-    p.className = 'sentnote';
-    p.innerHTML = '지금 바로 <b>확인 메일</b>을 보내 드렸어요. 메일 속 버튼을 누르면 '
-                + '1주일치 14쪽을 받으실 수 있습니다.<br>'
-                + '몇 분 안에 안 보이면 <b>스팸함</b>이나 <b>프로모션함</b>도 꼭 확인해 주세요.';
-    box.insertAdjacentElement('afterend', p);
+    gone = true;
+    box.innerHTML = '신청됐어요. 받는 곳으로 이동할게요…';
+    setTimeout(function(){ location.href = './thanks/'; }, 900);
   }).observe(box, {attributes:true, childList:true, subtree:true});
+})();
+
+/* 이메일 도메인 오타 알려주기 — 확인 메일을 없앤 만큼 오타가 그대로 죽은 주소가 된다 */
+(function(){
+  var FIX = {'gmial.com':'gmail.com','gmaill.com':'gmail.com','gmai.com':'gmail.com',
+    'gmail.co':'gmail.com','gmail.con':'gmail.com','gmail.cm':'gmail.com',
+    'navr.com':'naver.com','nave.com':'naver.com','naver.co':'naver.com','naver.con':'naver.com',
+    'hanmail.ne':'hanmail.net','hanmai.net':'hanmail.net','hanmail.com':'hanmail.net',
+    'dawum.net':'daum.net','daum.com':'daum.net','nate.co':'nate.com','kakao.co':'kakao.com'};
+  var input = document.getElementById('stb_email');
+  if(!input) return;
+  var tip = document.createElement('div');
+  tip.className = 'typotip'; tip.style.display = 'none';
+  input.insertAdjacentElement('afterend', tip);
+
+  input.addEventListener('blur', function(){
+    var v = input.value.trim(), at = v.lastIndexOf('@');
+    if(at < 0){ tip.style.display='none'; return; }
+    var right = FIX[v.slice(at+1).toLowerCase()];
+    if(!right){ tip.style.display='none'; return; }
+    var fixed = v.slice(0, at+1) + right;
+    tip.innerHTML = '혹시 <b>' + fixed + '</b> 아닌가요? ';
+    var a = document.createElement('button');
+    a.type = 'button'; a.className = 'typofix'; a.textContent = '이걸로 바꾸기';
+    a.addEventListener('click', function(){ input.value = fixed; tip.style.display='none'; });
+    tip.appendChild(a);
+    tip.style.display = 'block';
+  });
+  input.addEventListener('input', function(){ tip.style.display='none'; });
 })();
 
 /* 동의 약관 모달 — 배경 클릭과 Esc 로도 닫는다 */
