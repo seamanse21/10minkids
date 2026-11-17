@@ -171,10 +171,16 @@ section{padding:68px 0}
 .faq p{margin:0 0 18px;font-size:15.5px;color:var(--mute);line-height:1.75}
 
 /* 푸터 */
-footer{background:var(--navy);color:#9fadc4;padding:40px 0;font-size:14px}
-footer .wrap{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:space-between;align-items:center}
+footer{background:var(--navy);color:#9fadc4;padding:38px 0 44px;font-size:14px}
 footer a{color:#c3cddd;text-decoration:none}
 footer a:hover{text-decoration:underline}
+.ftop{display:flex;flex-wrap:wrap;gap:12px 26px;justify-content:space-between;align-items:center;
+  padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.14)}
+.fbrand{font-family:"Jua",sans-serif;font-size:17px;color:#fff}
+.flinks{display:flex;gap:18px}
+.biz{margin-top:20px;font-size:12.5px;line-height:1.95;color:#8494ad}
+.biz p{margin:0}
+.biz .copy{margin-top:12px;color:#6f7f98}
 
 /* 확대 */
 .lb{position:fixed;inset:0;background:rgba(20,26,38,.92);z-index:100;display:none;
@@ -461,10 +467,19 @@ footer a:hover{text-decoration:underline}
 
 <footer>
   <div class="wrap">
-    <div>© 2026 10분 키즈뉴스</div>
-    <div style="display:flex;gap:18px">
-      <a href="https://instagram.com/10minkids" rel="noopener">인스타그램</a>
-      <a href="#get">무료로 받기</a>
+    <div class="ftop">
+      <div class="fbrand">10분 키즈뉴스</div>
+      <div class="flinks">
+        <a href="https://instagram.com/10minkids" rel="noopener">인스타그램</a>
+        <a href="#get">무료로 받기</a>
+      </div>
+    </div>
+    <div class="biz">
+      <p>상호 해빗랩스 · 대표 이정문 · 개인정보보호책임자 이정문</p>
+      <p>경기도 시흥시 월곶중앙로14번길 87</p>
+      <p>사업자등록번호 548-18-01170 · 통신판매업신고 제2020-경기시흥-0352호</p>
+      <p>문의 010-8663-5439 · <a href="mailto:seamanse21@gmail.com">seamanse21@gmail.com</a></p>
+      <p class="copy">© 2026 해빗랩스. All rights reserved.</p>
     </div>
   </div>
 </footer>
