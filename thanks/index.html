@@ -201,6 +201,12 @@ footer a:hover{text-decoration:underline}
   border-radius:999px;box-shadow:0 10px 24px rgba(240,140,46,.33)}
 .dl:hover{background:var(--orange-d)}
 .meta{font-size:14px;color:var(--mute);margin-top:14px}
+.savetip{max-width:420px;margin:18px auto 0;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:16px 18px;text-align:left}
+.savetip b{display:block;font-size:14px;color:var(--navy);margin-bottom:8px}
+.savetip ol{margin:0;padding-left:20px}
+.savetip li{font-size:13.5px;line-height:1.75;color:var(--mute)}
+.savetip li b{display:inline;color:var(--orange-d);margin:0}
 .next{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:26px 24px;
   margin-top:40px;text-align:left;box-shadow:var(--sh)}
 .next h2{font-size:19px;color:var(--navy);margin:0 0 16px;text-align:left}
@@ -234,6 +240,11 @@ footer a:hover{text-decoration:underline}
       <span id="dlLabel">PDF 내려받기</span>
     </a>
     <div class="meta" id="dlMeta">A4 14쪽 · 약 4MB · 인쇄용</div>
+
+    <div class="savetip" id="saveTip" hidden>
+      <b id="saveTipHead">폰에 저장하려면</b>
+      <ol id="saveTipSteps"></ol>
+    </div>
 
     <div class="next">
       <h2>이렇게 쓰시면 됩니다</h2>
@@ -278,12 +289,41 @@ footer a:hover{text-decoration:underline}
   a.href = BASE + (phone ? 'view/' : 'dl/') + FILE;
   if (!phone) a.setAttribute('download', FILE);
 
-  if (phone) {
-    var label = document.getElementById('dlLabel');
-    var meta = document.getElementById('dlMeta');
-    if (label) label.textContent = 'PDF 열어보기';
-    if (meta) meta.textContent = 'A4 14쪽 · 약 4MB · 화면에서 바로 봅니다';
-  }
+  if (!phone) return;
+
+  var label = document.getElementById('dlLabel');
+  var meta = document.getElementById('dlMeta');
+  if (label) label.textContent = 'PDF 열어보기';
+  if (meta) meta.textContent = 'A4 14쪽 · 약 4MB · 화면에서 바로 봅니다';
+
+  /* 폰에서는 화면에 띄우기만 한다. 파일로 남기는 법을 알려 준다.
+     인스타 인앱 브라우저는 저장이 막혀 있어 바깥 브라우저로 한 번 나가야 한다.
+     아이폰 경로는 실제로 확인했고, 안드로이드는 기기마다 메뉴 이름이 조금씩 다르다. */
+  var ua = navigator.userAgent || '';
+  var ios = /iPhone|iPad|iPod/i.test(ua);
+  var inApp = /Instagram|FBAN|FBAV|KAKAOTALK|NAVER|Line\//i.test(ua);
+
+  var steps = ios
+    ? (inApp
+        ? ['PDF 가 뜨면 오른쪽 위 <b>…</b> 를 누르세요',
+           '<b>외부 브라우저에서 열기</b> 를 고릅니다',
+           '사파리에서 아래 <b>공유</b> 버튼 → <b>"파일"에 저장</b>']
+        : ['PDF 가 뜨면 아래 <b>공유</b> 버튼을 누르세요',
+           '<b>"파일"에 저장</b> 을 고릅니다'])
+    : (inApp
+        ? ['PDF 가 뜨면 오른쪽 위 <b>⋮</b> 를 누르세요',
+           '<b>다른 브라우저에서 열기</b>(크롬) 를 고릅니다',
+           '화면의 <b>다운로드</b> 아이콘을 누르면 파일에 저장됩니다']
+        : ['PDF 가 뜨면 화면의 <b>다운로드</b> 아이콘을 누르세요',
+           '안 보이면 <b>⋮</b> → <b>다운로드</b> 를 고릅니다']);
+
+  var box = document.getElementById('saveTip');
+  var ol = document.getElementById('saveTipSteps');
+  var head = document.getElementById('saveTipHead');
+  if (!box || !ol) return;
+  if (head) head.textContent = ios ? '아이폰에 저장하려면' : '폰에 저장하려면';
+  ol.innerHTML = steps.map(function (s) { return '<li>' + s + '</li>'; }).join('');
+  box.hidden = false;
 })();
 </script>
 </body>
