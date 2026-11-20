@@ -425,7 +425,7 @@ footer a:hover{text-decoration:underline}
               <div class="stb_form_ad_modal_bg" data-modal="stb_form_ad_agreemnet_modal"></div>
             </div>
           </div>
-          <p class="adhint">체크하시면 <b>매월 첫째 금요일에 새 1주일치</b>를 메일로 받아 보실 수 있어요.</p>
+          <p class="adhint">체크하시면 <b>매월 첫번째 금요일에 새 1주일치</b>를 메일로 받아 보실 수 있어요.</p>
 
           <div class="stb_form_result" id="stb_form_result"></div>
 
@@ -544,7 +544,7 @@ footer a:hover{text-decoration:underline}
   var box = document.getElementById('stb_form_result');
   if(!box) return;
 
-  /* 다음 '첫째 금요일' 을 계산한다. 자료가 올라가는 날이다.
+  /* 다음 '첫번째 금요일' 을 계산한다. 자료가 올라가는 날이다.
      날짜를 글로 박아 두면 그 달이 지나는 순간 거짓말이 되므로 매번 계산한다. */
   function firstFriday(y, m){
     var d = new Date(y, m, 1);
