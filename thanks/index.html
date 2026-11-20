@@ -226,14 +226,14 @@ footer a:hover{text-decoration:underline}
     <h1>신청이 완료됐어요</h1>
     <p class="lead">아래 버튼을 눌러 1주일치 14쪽을 받아 가세요.</p>
 
-    <a class="dl" href="../files/10min-kidsnews-sample.pdf" download>
+    <a class="dl" id="dl" href="https://files.10minkids.com/dl/10min-kidsnews-sample.pdf">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path d="M12 3v12M7 11l5 5 5-5M4 20h16" stroke="#fff" stroke-width="2.2"
               stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      PDF 내려받기
+      <span id="dlLabel">PDF 내려받기</span>
     </a>
-    <div class="meta">A4 14쪽 · 약 4MB · 인쇄용</div>
+    <div class="meta" id="dlMeta">A4 14쪽 · 약 4MB · 인쇄용</div>
 
     <div class="next">
       <h2>이렇게 쓰시면 됩니다</h2>
@@ -257,5 +257,34 @@ footer a:hover{text-decoration:underline}
     </div>
   </div>
 </div>
+<script>
+/* 받는 방식을 기기에 따라 가른다 (2026-11-20)
+   PC   → /dl/   서버가 Content-Disposition: attachment 를 붙여 바로 내려받는다
+   폰   → /view/ 헤더가 없어 브라우저가 화면에 띄운다. 폰에 바로 받는 것보다 보기 편하다
+
+   파일은 집 NAS(files.10minkids.com)에서 나간다. 이름은 고정이고 매주 덮어쓴다.
+   그래서 이 페이지는 발행 때마다 고칠 필요가 없다. 자세한 것은 운영/nas/README.md */
+(function () {
+  var a = document.getElementById('dl');
+  if (!a) return;
+  var BASE = 'https://files.10minkids.com/';
+  var FILE = '10min-kidsnews-sample.pdf';
+
+  /* 손가락으로 쓰는 좁은 화면을 폰으로 본다. 아이패드도 여기에 들어간다 */
+  var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  var narrow = Math.min(screen.width, screen.height) < 820;
+  var phone = coarse && narrow;
+
+  a.href = BASE + (phone ? 'view/' : 'dl/') + FILE;
+  if (!phone) a.setAttribute('download', FILE);
+
+  if (phone) {
+    var label = document.getElementById('dlLabel');
+    var meta = document.getElementById('dlMeta');
+    if (label) label.textContent = 'PDF 열어보기';
+    if (meta) meta.textContent = 'A4 14쪽 · 약 4MB · 화면에서 바로 봅니다';
+  }
+})();
+</script>
 </body>
 </html>
