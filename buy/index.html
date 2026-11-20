@@ -160,11 +160,6 @@ footer p{margin:3px 0}
 
 <div class="wrap">
 
-  <!-- 준비 중 안내 — 접수처가 연결되면 이 블록을 지운다 -->
-  <div class="note" id="notready">
-    신청 접수를 준비하고 있습니다. 곧 열립니다.
-  </div>
-
   <section>
     <div class="card">
       <h2 class="t">무엇을 받으시나요</h2>
@@ -356,12 +351,12 @@ footer p{margin:3px 0}
      접수처 주소. 운영/시트/구매자-접수.gs 를 웹 앱으로 배포하고
      받은 URL 을 여기에 넣으면 신청이 열린다. 비어 있으면 '준비 중'.
      ─────────────────────────────────────────────────────────── */
-  var HOOK = '';
+  var HOOK = 'https://script.google.com/macros/s/AKfycbyo1cR5M-At0d9CsKMjKguL4hq7J0I79NL8LD5SoUSOfZ8R4TdxU2tLVvhxOjHCKFLZAQ/exec';
 
   var form = document.getElementById('buyform');
   var go   = document.getElementById('go');
   var err  = document.getElementById('err');
-  var note = document.getElementById('notready');
+  var note = document.getElementById('notready');   // 접수처가 없을 때만 쓰는 안내
 
   if (HOOK) {
     form.action = HOOK;
