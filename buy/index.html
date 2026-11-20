@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>구독 신청 — 10분 키즈뉴스</title>
+<meta name="description" content="매달 한 번, 그 달 평일 전체를 인쇄용 PDF로 받습니다. 6개월 54,000원 · 1년 96,000원.">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="../fonts.css">
+<style>
+:root{
+  --orange:#f08c2e; --orange-d:#d9771a; --navy:#22304a; --cream:#fdf6e8;
+  --ink:#2b3444; --mute:#6c7789; --line:#e4e0d6; --white:#fff; --green:#2fa36b;
+  --wrap:720px; --r:14px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--cream);color:var(--ink);
+  font-family:"Gowun Dodum",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  font-size:17px;line-height:1.75;word-break:keep-all;overflow-wrap:break-word}
+img{max-width:100%;display:block}
+h1,h2,h3,.jua{font-family:"Jua","Gowun Dodum",sans-serif;font-weight:400;letter-spacing:-.01em;line-height:1.35}
+a{color:inherit}
+.wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 20px}
+
+.top{position:sticky;top:0;z-index:30;background:rgba(253,246,232,.94);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{font-family:"Jua",sans-serif;font-size:19px;color:var(--navy);text-decoration:none}
+.back{font-size:14.5px;color:var(--mute);text-decoration:none}
+.back:hover{color:var(--ink)}
+
+.head{padding:40px 0 10px;text-align:center}
+.head h1{font-size:clamp(26px,5.6vw,36px);color:var(--navy);margin:0 0 14px}
+.head h1 em{font-style:normal;color:var(--orange)}
+.head p{color:var(--mute);margin:0 auto;max-width:28em}
+
+section{padding:26px 0}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px}
+h2.t{font-size:20px;color:var(--navy);margin:0 0 14px}
+
+/* 받는 것 */
+.what{list-style:none;padding:0;margin:0;display:grid;gap:11px}
+.what li{display:flex;gap:11px;align-items:flex-start;font-size:16px}
+.what b{color:var(--navy)}
+.chk{flex:none;width:21px;height:21px;border-radius:50%;background:var(--green);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:12px;margin-top:3px}
+
+/* 상품 */
+.plans{display:grid;gap:12px;margin-top:4px}
+@media(min-width:620px){.plans{grid-template-columns:1fr 1fr}}
+.plan{position:relative;display:block;cursor:pointer}
+.plan input{position:absolute;opacity:0;width:0;height:0}
+.plan .box{border:2px solid var(--line);background:#fff;border-radius:var(--r);
+  padding:18px 18px 16px;height:100%;transition:border-color .12s,box-shadow .12s}
+.plan input:checked + .box{border-color:var(--orange);box-shadow:0 6px 20px rgba(240,140,46,.18)}
+.plan input:focus-visible + .box{outline:3px solid rgba(240,140,46,.45);outline-offset:2px}
+.plan .nm{font-family:"Jua",sans-serif;font-size:19px;color:var(--navy)}
+.plan .pr{font-family:"Jua",sans-serif;font-size:27px;color:var(--orange-d);margin:4px 0 2px}
+.plan .per{font-size:14px;color:var(--mute)}
+.badge{position:absolute;top:-10px;right:14px;background:var(--navy);color:#fff;
+  font-family:"Jua",sans-serif;font-size:12.5px;padding:3px 11px;border-radius:999px}
+
+/* 폼 */
+.fset{margin-bottom:16px}
+.lab{display:block;font-size:15px;color:var(--navy);margin-bottom:6px}
+.lab i{font-style:normal;color:var(--orange-d)}
+.hint{font-size:13.5px;color:var(--mute);margin:0 0 7px;line-height:1.6}
+input[type=text],input[type=email],select{width:100%;border:1.5px solid var(--line);background:#fff;
+  border-radius:10px;padding:12px 13px;font:inherit;font-size:16.5px;color:var(--ink)}
+input:focus,select:focus{outline:0;border-color:var(--orange)}
+.row2{display:grid;gap:12px}
+@media(min-width:620px){.row2{grid-template-columns:1fr 1fr}}
+
+.agree{border-top:1px solid var(--line);margin-top:20px;padding-top:16px}
+.ck{display:flex;gap:10px;align-items:flex-start;font-size:15px;margin-bottom:9px}
+.ck input{width:19px;height:19px;flex:none;accent-color:var(--orange);margin:3px 0 0}
+.ck a,.ck button{color:var(--orange-d);background:0;border:0;padding:0;font:inherit;
+  font-size:inherit;text-decoration:underline;cursor:pointer}
+.err{color:#c0392b;font-size:14px;margin-top:8px;display:none}
+.err.on{display:block}
+
+.go{width:100%;background:var(--orange);color:#fff;border:0;border-radius:999px;
+  font-family:"Jua",sans-serif;font-size:20px;padding:16px;margin-top:20px;cursor:pointer;
+  box-shadow:0 8px 20px rgba(240,140,46,.3)}
+.go:hover{background:var(--orange-d)}
+.go[disabled]{background:#c9c4b8;box-shadow:none;cursor:not-allowed}
+.fine{font-size:13.5px;color:var(--mute);text-align:center;margin-top:12px;line-height:1.65}
+
+/* 한 장에 들어 있는 것 — 효능 */
+.bens{display:grid;gap:9px;margin:4px 0 0}
+.ben{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);
+  border-radius:11px;padding:12px 15px}
+.ben span{color:var(--mute);font-size:15px;flex:1}
+.ben b{font-family:"Jua",sans-serif;font-size:17.5px;color:var(--navy);flex:none}
+.ben .tick{flex:none;width:26px;height:26px;border-radius:7px;background:var(--orange);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px}
+.two{display:flex;gap:10px;justify-content:center;margin-top:14px;
+  font-family:"Jua",sans-serif;font-size:19px;color:var(--navy)}
+.two i{font-style:normal;color:var(--line)}
+
+/* 환불 */
+.refund{background:var(--navy);color:#dde4ee;border-radius:var(--r);padding:22px}
+.refund h2{color:#fff;font-size:20px;margin:0 0 12px}
+.refund p{margin:0 0 10px;font-size:16px;line-height:1.7}
+.refund b{color:#ffd37a}
+.refund .ex{background:rgba(255,255,255,.08);border-radius:10px;padding:13px 15px;
+  font-size:15px;margin-top:4px}
+.refund .fine2{font-size:13.5px;color:#9fadc4;margin:12px 0 0}
+
+/* 입금 안내 미리 */
+.pay{background:#fff7ea;border:1px solid #f3dcb6;border-radius:var(--r);padding:18px;margin-top:10px}
+.pay h3{margin:0 0 8px;font-size:17px;color:var(--navy)}
+.pay p{margin:0;font-size:15.5px;color:#6b5a3c;line-height:1.7}
+.pay b{color:var(--orange-d)}
+
+details{border-top:1px solid var(--line);padding:14px 0}
+details summary{cursor:pointer;font-size:16px;color:var(--navy);list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"＋ ";color:var(--orange)}
+details[open] summary::before{content:"－ "}
+details p{font-size:15px;color:var(--mute);margin:10px 0 0}
+
+footer{background:var(--navy);color:#9fadc4;padding:34px 0 40px;font-size:13.5px;margin-top:40px}
+footer a{color:#c3cddd}
+footer p{margin:3px 0}
+.copy{margin-top:12px;color:#7d8ba3}
+
+.note{background:#fff;border:1.5px dashed var(--orange);border-radius:var(--r);
+  padding:16px 18px;margin:20px 0;font-size:15px;color:var(--orange-d)}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <a class="brand" href="../">10분 키즈뉴스</a>
+    <a class="back" href="../">← 돌아가기</a>
+  </div>
+</div>
+
+<div class="head wrap">
+  <h1>매달 한 번,<br><em>그 달 전체</em>를 받습니다</h1>
+  <p>매일 기사 한 장, 활동지 한 장.<br>
+    읽을거리를 고르고 찾는 일은 저희가 하겠습니다.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- 준비 중 안내 — 접수처가 연결되면 이 블록을 지운다 -->
+  <div class="note" id="notready">
+    신청 접수를 준비하고 있습니다. 곧 열립니다.
+  </div>
+
+  <section>
+    <div class="card">
+      <h2 class="t">무엇을 받으시나요</h2>
+      <ul class="what">
+        <li><span class="chk">✓</span><div><b>매달 1일, 그 달 전체 PDF</b> — 평일 20~23일분, 50~60쪽입니다.</div></li>
+        <li><span class="chk">✓</span><div><b>하루치가 종이 한 장</b> — 앞면이 기사, 뒷면이 활동지입니다. 양면으로 인쇄해 그대로 쓰세요.</div></li>
+        <li><span class="chk">✓</span><div><b>주말에 한 번 더</b> — 그 주 다섯 편을 되짚는 복습면과 어휘 모아보기가 주마다 들어 있습니다.</div></li>
+        <li><span class="chk">✓</span><div><b>표지에 아이 이름</b>이 들어갑니다. 우리 아이 신문이 됩니다.</div></li>
+        <li><span class="chk">✓</span><div><b>구글 드라이브로 보내 드립니다.</b> 링크를 눌러 언제든 다시 받으실 수 있어요.</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="t">한 장에 이만큼 들어 있습니다</h2>
+    <div class="bens">
+      <div class="ben"><span class="tick">✓</span><b>시사상식</b><span>오늘의 뉴스를 아이 눈높이로</span></div>
+      <div class="ben"><span class="tick">✓</span><b>배경지식</b><span>왜 그런 일이 생겼는지까지</span></div>
+      <div class="ben"><span class="tick">✓</span><b>어휘력</b><span>낱말 · 사자성어 · 한자 · 영단어</span></div>
+      <div class="ben"><span class="tick">✓</span><b>글쓰기</b><span>정답 없는 질문에 내 생각 쓰기</span></div>
+      <div class="ben"><span class="tick">✓</span><b>정서케어</b><span>마음을 다루는 기사가 주마다</span></div>
+    </div>
+    <div class="two">독해력 <i>|</i> 어휘력</div>
+  </section>
+
+  <form id="buyform" method="POST" action="" accept-charset="utf-8" novalidate>
+    <section>
+      <h2 class="t">상품을 골라 주세요</h2>
+      <div class="plans">
+        <label class="plan">
+          <input type="radio" name="plan" value="6개월" checked>
+          <div class="box">
+            <div class="nm">6개월</div>
+            <div class="pr">54,000원</div>
+            <div class="per">한 달에 9,000원 · 하루 약 350원</div>
+          </div>
+        </label>
+        <label class="plan">
+          <span class="badge">가장 많이 고르세요</span>
+          <input type="radio" name="plan" value="1년">
+          <div class="box">
+            <div class="nm">1년</div>
+            <div class="pr">96,000원</div>
+            <div class="per">한 달에 8,000원 · 하루 약 310원</div>
+          </div>
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <div class="card">
+        <h2 class="t">받으실 분 정보</h2>
+
+        <div class="fset">
+          <label class="lab" for="email">이메일 <i>*</i></label>
+          <p class="hint"><b>구글 계정</b>으로 적어 주세요. 드라이브 링크가 그 계정에서만 열립니다.</p>
+          <input type="email" id="email" name="email" placeholder="parent@gmail.com"
+                 autocomplete="email" inputmode="email" required>
+        </div>
+
+        <div class="row2">
+          <div class="fset">
+            <label class="lab" for="payer">입금하실 분 이름 <i>*</i></label>
+            <p class="hint">통장에 찍히는 이름이요.</p>
+            <input type="text" id="payer" name="payer" placeholder="홍길동" autocomplete="name" required>
+          </div>
+          <div class="fset">
+            <label class="lab" for="kid">아이 이름 <i>*</i></label>
+            <p class="hint">신문 표지에 들어갑니다.</p>
+            <input type="text" id="kid" name="kid" placeholder="홍하늘" required>
+          </div>
+        </div>
+
+        <div class="fset">
+          <label class="lab" for="grade">아이 학년</label>
+          <p class="hint">아이가 여럿이면 주로 보여 주실 아이를 골라 주세요. 난이도를 다듬는 데에만 씁니다.</p>
+          <select id="grade" name="grade">
+            <option value="">선택</option>
+            <option>7세</option><option>초1</option><option>초2</option>
+            <option>초3</option><option>초4</option><option>초5 이상</option>
+          </select>
+        </div>
+
+        <div class="agree">
+          <label class="ck">
+            <input type="checkbox" id="ck1">
+            <span>(필수) 개인정보 수집 및 이용에 동의합니다.
+              <button type="button" id="openp">내용 보기</button></span>
+          </label>
+          <label class="ck">
+            <input type="checkbox" id="ck2">
+            <span>(필수) 그만두실 때 <b>받으신 달 수만큼 한 달 정가 12,000원을 빼고</b>
+              돌려받으신다는 점을 확인했습니다. 아직 받지 않으셨다면 전액 돌려 드립니다.</span>
+          </label>
+          <div class="err" id="err"></div>
+        </div>
+
+        <button type="submit" class="go" id="go">신청하고 입금 안내 받기</button>
+        <p class="fine">신청하시면 계좌와 <b>주문번호</b>를 알려 드립니다.<br>
+          입금이 확인되면 자료를 보내 드려요.</p>
+      </div>
+    </section>
+  </form>
+
+  <section>
+    <div class="pay">
+      <h3>입금은 이렇게 됩니다</h3>
+      <p>신청하시면 <b>계좌번호와 주문번호</b>가 화면과 메일로 나옵니다.<br>
+        입금하실 때 <b>이름 뒤에 주문번호 두 자리</b>를 붙여 주세요 — 예를 들어 <b>홍길동K7</b>.<br>
+        그래야 누가 보내신 건지 바로 찾을 수 있습니다. 입금은 <b>24시간 안에</b> 부탁드려요.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="refund">
+      <h2>환불 안내</h2>
+      <p>구독을 그만두고 싶으시면 <b>받으신 달 수만큼 한 달 정가를 빼고</b>
+        남은 금액을 돌려 드립니다.</p>
+      <div class="ex">
+        <b>한 달 정가 12,000원</b><br>
+        예) 6개월 54,000원을 내시고 두 달 받으신 뒤 그만두시면<br>
+        54,000 − (12,000 × 2) = <b>30,000원</b>을 돌려 드립니다.
+      </div>
+      <p class="fine2">구독 기간 중 일시 정지(홀딩)는 운영하지 않습니다.<br>
+        아직 받지 않으셨다면 <b>전액 돌려 드립니다.</b> 메일로 말씀해 주세요.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="t">궁금하실 것들</h2>
+    <details open>
+      <summary>언제부터 받나요?</summary>
+      <p>입금이 확인되면 <b>그 달 자료를 바로</b> 보내 드립니다. 그다음부터는 매달 1일에 그 달 전체를 보내 드려요.</p>
+    </details>
+    <details>
+      <summary>구글 계정이 없으면요?</summary>
+      <p>드라이브 링크는 구글 계정에서 열립니다. 없으시면 신청하실 때 적어 주세요 — 메일로 직접 보내 드리는 방법으로 바꿔 드립니다.</p>
+    </details>
+    <details>
+      <summary>중간에 그만두고 싶으면요?</summary>
+      <p>언제든 그만두실 수 있습니다. 받으신 달 수만큼 한 달 정가 12,000원을 빼고 남은 금액을 돌려 드려요.
+        예를 들어 6개월 54,000원에 두 달을 받으셨다면 30,000원이 돌아갑니다.
+        일시 정지(홀딩)는 운영하지 않습니다.</p>
+    </details>
+    <details>
+      <summary>아이가 둘인데 따로 신청해야 하나요?</summary>
+      <p>아닙니다. 한 가정에서 여럿이 보셔도 됩니다. 표지 이름만 한 명으로 들어갑니다.</p>
+    </details>
+    <details>
+      <summary>먼저 보고 정하고 싶어요.</summary>
+      <p><a href="../#get">체험본 1주일치 14쪽</a>을 무료로 받아 보실 수 있습니다. 실제로 쓰는 것과 같은 자료입니다.</p>
+    </details>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>상호 해빗랩스 · 대표 이정문 · 개인정보보호책임자 이정문</p>
+    <p>경기도 시흥시 월곶중앙로14번길 87</p>
+    <p>사업자등록번호 548-18-01170 · 통신판매업신고 제2020-경기시흥-0352호</p>
+    <p>문의 010-8663-5439 · <a href="mailto:seamanse21@gmail.com">seamanse21@gmail.com</a></p>
+    <p class="copy">© 2026 해빗랩스. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ───────────────────────────────────────────────────────────
+     접수처 주소. 운영/시트/구매자-접수.gs 를 웹 앱으로 배포하고
+     받은 URL 을 여기에 넣으면 신청이 열린다. 비어 있으면 '준비 중'.
+     ─────────────────────────────────────────────────────────── */
+  var HOOK = '';
+
+  var form = document.getElementById('buyform');
+  var go   = document.getElementById('go');
+  var err  = document.getElementById('err');
+  var note = document.getElementById('notready');
+
+  if (HOOK) {
+    form.action = HOOK;
+    if (note) note.parentNode.removeChild(note);
+  } else {
+    go.disabled = true;
+    go.textContent = '신청 준비 중입니다';
+  }
+
+  function fail(msg, el){
+    err.textContent = msg; err.classList.add('on');
+    if (el) { el.focus(); el.scrollIntoView({behavior:'smooth', block:'center'}); }
+    return false;
+  }
+
+  form.addEventListener('submit', function(e){
+    err.classList.remove('on');
+    var email = document.getElementById('email');
+    var payer = document.getElementById('payer');
+    var kid   = document.getElementById('kid');
+
+    if (!HOOK) { e.preventDefault(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+      e.preventDefault(); return fail('이메일 주소를 확인해 주세요.', email);
+    }
+    if (!payer.value.trim()) { e.preventDefault(); return fail('입금하실 분 이름을 적어 주세요.', payer); }
+    if (!kid.value.trim())   { e.preventDefault(); return fail('아이 이름을 적어 주세요.', kid); }
+    if (!document.getElementById('ck1').checked || !document.getElementById('ck2').checked) {
+      e.preventDefault(); return fail('필수 항목 두 가지에 모두 동의해 주셔야 신청할 수 있어요.');
+    }
+    go.disabled = true; go.textContent = '접수하는 중…';
+  });
+
+  document.getElementById('openp').addEventListener('click', function(){
+    alert('수집 항목: 이메일, 입금자명, 아이 이름, 아이 학년\n' +
+          '이용 목적: 자료 전달과 결제 확인\n' +
+          '보유 기간: 구독이 끝난 뒤 1년, 그 뒤 지웁니다\n\n' +
+          '동의하지 않으셔도 되지만, 그러면 자료를 보내 드릴 수 없습니다.');
+  });
+})();
+</script>
+</body>
+</html>
