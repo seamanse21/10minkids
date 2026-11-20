@@ -137,6 +137,10 @@ section{padding:68px 0}
 .stb_form_modal_open_btn{background:0;border:0;padding:0;font:inherit;color:var(--orange-d);
   text-decoration:underline;cursor:pointer}
 .adhint{font-size:13px;color:var(--mute);margin:4px 0 0;padding-left:28px;line-height:1.55}
+.needchk{display:none;margin:12px 0 0;padding:12px 14px;border-radius:10px;
+  background:#fff4f4;border:1.5px solid #e4572e;color:#c23b16;font-size:14px;font-weight:700;line-height:1.6}
+.needchk.on{display:block}
+.chkflash{outline:2.5px solid #e4572e;outline-offset:4px;border-radius:8px}
 .stb_form_set_submit{border:0;margin:0;padding:0}
 .stb_form_submit_button{width:100%;background:var(--orange);color:#fff;border:0;border-radius:12px;
   padding:17px;font-family:"Jua",sans-serif;font-size:19px;cursor:pointer;margin-top:18px;
@@ -510,16 +514,74 @@ footer a:hover{text-decoration:underline}
 
 /* 제출이 성공하면 곧바로 받는 페이지로 보낸다.
    스티비의 '구독 확인 이메일' 을 꺼 둔 상태를 전제로 한다. 다시 켜면 이 이동을 빼야 한다. */
+/* 필수 동의를 안 한 채 버튼을 누르면 스티비 스크립트가 막기만 하고 아무 말도 하지 않는다.
+   누른 사람은 "고장났나" 하고 나가 버린다. 그래서 안내를 직접 붙인다. (2026-11-20) */
+(function(){
+  var btn = document.getElementById('stb_form_submit_button');
+  var pol = document.getElementById('stb_policy');
+  if(!btn || !pol) return;
+
+  var note = document.createElement('div');
+  note.className = 'needchk';
+  note.textContent = '아래 (필수) 개인정보 수집 및 이용에 동의하셔야 받으실 수 있어요.';
+  btn.closest('fieldset').parentNode.insertBefore(note, btn.closest('fieldset'));
+
+  var row = pol.closest('label') || pol.parentNode;
+  function clear(){ note.classList.remove('on'); row.classList.remove('chkflash'); }
+
+  btn.addEventListener('click', function(){
+    if (pol.checked) { clear(); return; }
+    note.classList.add('on');
+    row.classList.add('chkflash');
+    row.scrollIntoView({behavior:'smooth', block:'center'});
+  }, true);
+
+  pol.addEventListener('change', function(){ if (pol.checked) clear(); });
+})();
+
 (function(){
   var box = document.getElementById('stb_form_result');
   if(!box) return;
+
+  /* 다음 '첫째 금요일' 을 계산한다. 자료가 올라가는 날이다.
+     날짜를 글로 박아 두면 그 달이 지나는 순간 거짓말이 되므로 매번 계산한다. */
+  function firstFriday(y, m){
+    var d = new Date(y, m, 1);
+    while (d.getDay() !== 5) d.setDate(d.getDate() + 1);
+    return d;
+  }
+  function nextDrop(){
+    var now = new Date(), t = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var f = firstFriday(t.getFullYear(), t.getMonth());
+    if (f < t) f = firstFriday(t.getFullYear(), t.getMonth() + 1);
+    return (f.getMonth() + 1) + '월 ' + f.getDate() + '일(금)';
+  }
+
   var gone = false;
   new MutationObserver(function(){
-    if(gone) return;
-    if(box.className.indexOf('success') < 0) return;
-    gone = true;
-    box.innerHTML = '신청됐어요. 받는 곳으로 이동할게요…';
-    setTimeout(function(){ location.href = './thanks/'; }, 900);
+    if (gone) return;
+    var txt = box.textContent || '';
+
+    if (box.className.indexOf('success') >= 0) {
+      gone = true;
+      box.innerHTML = '신청됐어요. 받는 곳으로 이동할게요…';
+      setTimeout(function(){ location.href = './thanks/'; }, 900);
+      return;
+    }
+
+    /* 이미 등록된 주소 — 스티비는 거부만 하고 끝낸다.
+       그대로 두면 이미 신청한 사람이 자료를 다시 받을 길이 없다. */
+    if (/이미/.test(txt) && !box.querySelector('[data-dupmsg]')) {
+      box.innerHTML =
+        '<div data-dupmsg style="text-align:left;line-height:1.7">' +
+        '<b>이미 신청하신 주소예요.</b><br>' +
+        '아래에서 지금 올라와 있는 1주일치를 다시 받으실 수 있습니다.<br>' +
+        '<a href="./thanks/?again=1" style="display:inline-block;margin:10px 0 6px;' +
+        'background:var(--orange);color:#fff;text-decoration:none;font-weight:700;' +
+        'padding:10px 18px;border-radius:999px">1주일치 다시 받기</a><br>' +
+        '<span style="color:var(--mute);font-size:13px">새 자료는 매월 첫째 금요일에 올라갑니다. ' +
+        '다음은 ' + nextDrop() + '이에요.</span></div>';
+    }
   }).observe(box, {attributes:true, childList:true, subtree:true});
 })();
 

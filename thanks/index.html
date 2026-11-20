@@ -229,8 +229,8 @@ footer a:hover{text-decoration:underline}
       </svg>
     </div>
 
-    <h1>신청이 완료됐어요</h1>
-    <p class="lead">아래 버튼을 눌러 1주일치 14쪽을 받아 가세요.</p>
+    <h1 id="thTitle">신청이 완료됐어요</h1>
+    <p class="lead" id="thLead">아래 버튼을 눌러 1주일치 14쪽을 받아 가세요.</p>
 
     <a class="dl" id="dl" href="https://files.10minkids.com/dl/10min-kidsnews-sample.pdf">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -280,6 +280,14 @@ footer a:hover{text-decoration:underline}
    파일은 집 NAS(files.10minkids.com)에서 나간다. 이름은 고정이고 **한 달에 한 번** 덮어쓴다.
    매주 갈면 유료로 파는 것과 같은 양이 공짜로 나가므로 그렇게 하지 않는다.
    이 페이지는 발행 때마다 고칠 필요가 없다. 자세한 것은 운영/nas/README.md */
+/* 이미 신청한 분이 다시 받으러 온 경우 — 첫 신청처럼 보이면 어리둥절하다 */
+(function () {
+  if (!/[?&]again=1/.test(location.search)) return;
+  var h = document.getElementById('thTitle'), l = document.getElementById('thLead');
+  if (h) h.textContent = '다시 오셨네요';
+  if (l) l.textContent = '지금 올라와 있는 1주일치 14쪽입니다.';
+})();
+
 (function () {
   var a = document.getElementById('dl');
   if (!a) return;
