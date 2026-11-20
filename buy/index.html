@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>구독 신청 — 10분 키즈뉴스</title>
 <meta name="description" content="매달 한 번, 그 달 평일 전체를 인쇄용 PDF로 받습니다. 6개월 54,000원 · 1년 96,000원.">
-<meta name="robots" content="noindex">
 <link rel="stylesheet" href="../fonts.css">
 <style>
 :root{
@@ -86,6 +85,20 @@ input:focus,select:focus{outline:0;border-color:var(--orange)}
 .go:hover{background:var(--orange-d)}
 .go[disabled]{background:#c9c4b8;box-shadow:none;cursor:not-allowed}
 .fine{font-size:13.5px;color:var(--mute);text-align:center;margin-top:12px;line-height:1.65}
+
+/* 모달 */
+.mask{position:fixed;inset:0;background:rgba(34,48,74,.55);z-index:50;
+  display:none;align-items:center;justify-content:center;padding:20px}
+.mask.on{display:flex}
+.modal{background:#fff;border-radius:var(--r);max-width:520px;width:100%;
+  max-height:82vh;overflow:auto;padding:24px;box-shadow:0 20px 50px rgba(34,48,74,.3)}
+.modal h3{margin:0 0 14px;font-size:19px;color:var(--navy)}
+.modal table{width:100%;border-collapse:collapse;font-size:15px;margin-bottom:14px}
+.modal th,.modal td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+.modal th{background:#faf7f0;color:var(--navy);width:33%;font-weight:600}
+.modal p{font-size:14.5px;color:var(--mute);margin:0 0 10px;line-height:1.7}
+.modal .close{width:100%;background:var(--navy);color:#fff;border:0;border-radius:999px;
+  padding:13px;font:inherit;font-size:16px;cursor:pointer;margin-top:6px}
 
 /* 한 장에 들어 있는 것 — 효능 */
 .bens{display:grid;gap:9px;margin:4px 0 0}
@@ -307,6 +320,24 @@ footer p{margin:3px 0}
   </section>
 </div>
 
+<div class="mask" id="pmask">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="ptitle">
+    <h3 id="ptitle">개인정보 수집 및 이용 안내</h3>
+    <table>
+      <tr><th>수집 항목</th><td>이메일, 입금자명, 아이 이름, 아이 학년</td></tr>
+      <tr><th>이용 목적</th><td>입금 확인과 자료 전달, 구독 문의 응대</td></tr>
+      <tr><th>보유 기간</th><td>구독이 끝난 날부터 1년. 그 뒤 지웁니다<br>
+        <span style="color:#6c7789;font-size:13.5px">전자상거래법상 계약·결제 기록은 5년간 보관합니다</span></td></tr>
+      <tr><th>맡기는 곳</th><td>구글(드라이브·시트) — 자료 전달과 명단 보관</td></tr>
+    </table>
+    <p>동의하지 않으실 수 있습니다. 다만 그러면 자료를 보내 드릴 방법이 없어
+      신청을 받을 수 없습니다.</p>
+    <p>개인정보보호책임자 이정문 ·
+      <a href="mailto:seamanse21@gmail.com" style="color:var(--orange-d)">seamanse21@gmail.com</a></p>
+    <button type="button" class="close" id="pclose">닫기</button>
+  </div>
+</div>
+
 <footer>
   <div class="wrap">
     <p>상호 해빗랩스 · 대표 이정문 · 개인정보보호책임자 이정문</p>
@@ -364,11 +395,14 @@ footer p{margin:3px 0}
     go.disabled = true; go.textContent = '접수하는 중…';
   });
 
-  document.getElementById('openp').addEventListener('click', function(){
-    alert('수집 항목: 이메일, 입금자명, 아이 이름, 아이 학년\n' +
-          '이용 목적: 자료 전달과 결제 확인\n' +
-          '보유 기간: 구독이 끝난 뒤 1년, 그 뒤 지웁니다\n\n' +
-          '동의하지 않으셔도 되지만, 그러면 자료를 보내 드릴 수 없습니다.');
+  var mask  = document.getElementById('pmask');
+  var open  = function(){ mask.classList.add('on'); document.getElementById('pclose').focus(); };
+  var close = function(){ mask.classList.remove('on'); };
+  document.getElementById('openp').addEventListener('click', open);
+  document.getElementById('pclose').addEventListener('click', close);
+  mask.addEventListener('click', function(e){ if (e.target === mask) close(); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && mask.classList.contains('on')) close();
   });
 })();
 </script>
